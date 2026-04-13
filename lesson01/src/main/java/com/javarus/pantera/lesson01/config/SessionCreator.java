@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.io.Closeable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Component
+
 @ToString
 public class SessionCreator implements Closeable {
 
