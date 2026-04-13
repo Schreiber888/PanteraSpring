@@ -4,14 +4,11 @@ import com.javarus.pantera.lesson01.repository.UserRepository;
 import com.javarus.pantera.lesson01.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 @Configuration
+@PropertySource("classpath:application.properties")
 public class Config {
-
-    @Bean
-     public ApplicationProperties getApplicationProperties() {
-         return new ApplicationProperties();
-     }
 
     @Bean
     public SessionCreator getSessionCreator(ApplicationProperties applicationProperties) {

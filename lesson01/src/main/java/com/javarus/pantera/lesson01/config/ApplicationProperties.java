@@ -2,17 +2,19 @@ package com.javarus.pantera.lesson01.config;
 
 import lombok.SneakyThrows;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import java.io.FileReader;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 
 
+@Configuration
 @ToString
 public class ApplicationProperties extends Properties {
 
@@ -23,38 +25,23 @@ public class ApplicationProperties extends Properties {
     public static final String ENV_EXPRESSION = "\\$\\{[A-Z_]+:.+}";
 
     @SneakyThrows
-    public ApplicationProperties() {
-        this.load(new FileReader(CLASSES_ROOT + "/application.properties"));
+    public ApplicationProperties(
+            @Value("${" + HIBERNATE_CONNECTION_URL + "}") String url,
+            @Value("${" + HIBERNATE_CONNECTION_DRIVER_CLASS + "}") String driverClass,
+            @Value("${" + HIBERNATE_CONNECTION_USERNAME + "}") String username,
+            @Value("${" + HIBERNATE_CONNECTION_PASSWORD + "}") String password
+    ) {
+        this.put(HIBERNATE_CONNECTION_URL, url);
+        this.put(HIBERNATE_CONNECTION_USERNAME, username);
+        this.put(HIBERNATE_CONNECTION_PASSWORD, password);
         try {
-            String driver = this.getProperty(HIBERNATE_CONNECTION_DRIVER_CLASS);
-            Class.forName(driver);
+            Class.forName(driverClass);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        scanEnvironmentData();
         System.out.println(this);
     }
 
-
-
-    private void scanEnvironmentData() {
-        this.forEach((key, value) -> {
-            String valueString = value.toString();
-            Map<String, String> envMap = System.getenv();
-            if (valueString.matches(ENV_EXPRESSION)) {
-                String[] parts = valueString
-                        .replace("${", "")
-                        .replace("}", "")
-                        .split(":", 2);
-                if (parts.length == 2) {
-                    String envKey = parts[0];
-                    String defaultValue = parts[1];
-                    String actualValue = envMap.getOrDefault(envKey, defaultValue);
-                    put(key, actualValue);
-                }
-            }
-        });
-    }
 
     //any runtime
     public final static Path CLASSES_ROOT = Paths.get(URI.create(
