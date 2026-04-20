@@ -36,8 +36,6 @@ public class UserService {
 
     private final Map<String,Object> beans;
 
-
-
     public void saveAll(List<User> users) {
         validators.forEach(v -> {
             for (User user : users) {
