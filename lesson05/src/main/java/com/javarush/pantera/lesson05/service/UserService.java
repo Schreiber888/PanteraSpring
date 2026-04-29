@@ -3,6 +3,7 @@ package com.javarush.pantera.lesson05.service;
 import com.javarush.pantera.lesson05.entity.User;
 import com.javarush.pantera.lesson05.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
